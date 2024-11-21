@@ -3,7 +3,7 @@ import './App.css';
 import Header from './components/Header';
 import Checkout from './components/Checkout';
 import Shop from './components/Shop';
-import CartContextProvider, { CartContext } from './context/CartContext'; 
+import CartContextProvider from './context/CartContext';
 
 function App() {
     return (

@@ -1,19 +1,17 @@
 import { createContext, useState, useEffect, useReducer } from "react";
-import Cart from "../Cart";
-import { upload } from "@testing-library/user-event/dist/upload";
 
 export const CartContext = createContext({
     items: [],
     products: [],
     loading: false,
     error: "",
-    addItemToCart: () => { },
-    updateItemQuantity: () => { },
+    addItemToCart: () => {},
+    updateItemQuantity: () => {},
 });
 
-export default function CartContextProvider({ children }) {
-
-    const [products, setProducts] = useState([]);
+export default function CartContextProvider({children}){
+    
+    const [products, setProducts] = useState ([]);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -21,7 +19,7 @@ export default function CartContextProvider({ children }) {
         async function fetchProducts() {
             setLoading(true);
 
-            const response = await fetch("https://dummyjson.com/products/category/tops?limit=12&select=id,thumbnail,title,price,description");
+            const response = await fetch("https://dummyjson.com/products/category/motorcycle?limit=12&select=id,thumbnail,title,price,description");
             if (response.ok) {
                 const result = await response.json();
                 setProducts(result.products);
@@ -37,59 +35,59 @@ export default function CartContextProvider({ children }) {
 
     // Shopping Cart
 
-    function cartReducer(state, action) {
-        if (action.type === "ADD_ITEM") {
-            const updatedItems = [...state.items];
+    function cartReducer(state, action){
+        if(action.type === "ADD_ITEM") {
+            const updatedItems = [ ...state.items];
 
             const existingCartItemIndex = updatedItems.findIndex(
                 (item) => item.id === action.payload.id
             );
 
-            const existingCartItem = updatedItems[existingCartItemIndex];
+            const existingCartItem = updatedItems[ existingCartItemIndex ];
 
-            if (existingCartItem) {
+            if(existingCartItem) {
                 const updatedItem = {
                     ...existingCartItem,
-                    quantity: existingCartItem.quatity + 1,
+                    quantity: existingCartItem.quantity + 1,
                 }
-                updatedItems[existingCartItemIndex] = updatedItem;
 
+                updatedItems[existingCartItemIndex] = updatedItem;
             } else {
                 const product = action.payload.products.find(
                     (product) => product.id === action.payload.id
                 );
                 updatedItems.push({
                     id: action.payload.id,
-                    thumbnail: product.thumbnail,
+                    thubnail: product.thubnail,
                     title: product.title,
                     price: product.price,
                     quantity: 1,
-                });
+                })
             }
 
             return { items: updatedItems };
         }
 
-        if (action.type === "UPDATE_ITEM") {
-            const updatedItems = [...state.items];
+        if(action.type === "UPDATE_ITEM") {
+            const updatedItems = [ ...state.items];
 
             const updatedItemIndex = updatedItems.findIndex(
                 (item) => item.id === action.payload.id
-            )
+            );
 
-            const updatedItem = { ...updatedItem[updatedItemIndex] };
+            const updatedItem = {...updatedItems[updatedItemIndex]}
 
             updatedItem.quantity += action.payload.amount;
 
-            if (updatedItem.quantity < 1) {
+            if(updatedItem.quantity < 1){
                 updatedItems.splice(updatedItemIndex, 1);
             } else {
                 updatedItems[updatedItemIndex] = updatedItem;
             }
 
-            return { ...state, items: updatedItems };
+            return { ...state, items: updatedItems};
         }
-
+        
         return state;
     }
 
@@ -98,17 +96,17 @@ export default function CartContextProvider({ children }) {
         { items: [] }
     );
 
-    function handleAddItemToCart(id) {
+    function handleAddItemToCart(id){
         cartDispatch({
             type: "ADD_ITEM",
-            payload: { id, products }
+            payload: {id, products}
         });
     }
 
-    function handleUpdateCartItemQuantity(id, amount) {
+    function handleUpdateCartItemQuantity(id, amount){
         cartDispatch({
             type: "UPDATE_ITEM",
-            payload: { id, amount }
+            payload: {id, amount}
         });
     }
 
@@ -118,7 +116,7 @@ export default function CartContextProvider({ children }) {
         loading: loading,
         error: error,
         addItemToCart: handleAddItemToCart,
-        updateItemQuantity: handleUpdateCartItemQuantity,
+        updateItemQuantity: handleUpdateCartItemQuantity
     };
 
     return <CartContext.Provider value={ctx}>
