@@ -20,7 +20,7 @@ export default function CartContextProvider({ children }) {
 
         async function getProducts() {
             setLoading(true);
-            const { data: products, error } = await supabase.from("products").select();
+            const { data: products, error } = await supa.from("products").selects();
             if (products.length > 0) {
                 setProducts(products);
             } else {
