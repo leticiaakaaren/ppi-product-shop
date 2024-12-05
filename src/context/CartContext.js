@@ -20,14 +20,18 @@ export default function CartContextProvider({ children }) {
 
         async function getProducts() {
             setLoading(true);
-            const { data: products, error } = await supa.from("products").selects();
+            const { data: products, error } = await supabase.from("products").select();
             if (products.length > 0) {
                 setProducts(products);
             } else {
-                setError(`Fetching products failed! ${error}`)
-            } setLoading(false);
+                setError(`Fetcing products failed ${error}`);
+            }
+            setLoading(false);
         }
         getProducts();
+
+
+
 
         // async function fetchProducts() {
         //     setLoading(true);
